@@ -19,15 +19,18 @@ jobs:
       docker:
         image: docker:19.03.12
         options: --privileged
-        ports:
-          - 5432:5432 
 
     steps:
       - name: Checkout code
         uses: actions/checkout@v3
 
+      - name: Install Docker Compose
+        run: |
+          sudo apt-get update
+          sudo apt-get install docker-compose -y
+
       - name: Set up Docker Compose
-        run: docker-compose up -d
+        run: docker-compose -f docker-compose.yml up -d
 
       - name: Run tests in Docker container
         run: docker-compose exec -T app pytest --maxfail=1 --disable-warnings
