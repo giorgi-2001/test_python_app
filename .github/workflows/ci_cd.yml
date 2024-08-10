@@ -1,18 +1,17 @@
 name: CI/CD Pipeline
 
-# Trigger workflow on push and pull requests to the main branch
 on:
   push:
     branches:
       - main
   pull_request:
     branches:
-      - main 
+      - '**'
 
 jobs:
-  # Job for running tests on push or pull requests
+  # Job to run tests and static analysis on push
   run-tests:
-    name: Run Tests
+    name: Run Tests and Static Analysis
     runs-on: ubuntu-latest
 
     services:
@@ -32,19 +31,22 @@ jobs:
       - name: Set up Docker Compose
         run: docker-compose -f docker-compose.yml up -d
 
+      - name: Run Flake8
+        run: docker-compose exec -T app flake8 .
+
       - name: Run tests in Docker container
         run: docker-compose exec -T app pytest /test --maxfail=1 --disable-warnings
 
       - name: Shut down Docker Compose
         run: docker-compose down
 
-  # Job for building and publishing Docker images on merge to main
+  # Job to build and publish Docker image on pull request
   publish-docker:
     name: Build and Publish Docker Images
     runs-on: ubuntu-latest
-    needs: run-tests # Ensure tests pass before publishing
+    needs: run-tests
 
-    if: github.ref == 'refs/heads/main' # Only run this job on the main branch
+    if: github.event_name == 'pull_request'
 
     steps:
       - name: Checkout code
@@ -63,9 +65,6 @@ jobs:
       - name: Build and push Docker image
         run: |
           docker buildx build --push --platform linux/amd64,linux/arm64 \
-            -t ghcr.io/${{ github.repository }}/app:latest .
+            -t ghcr.io/${{ github.repository }}/app:pr-${{ github.event.number }} .
 
-      - name: Post-success notification
-        if: success()
-        run: echo "Docker image published successfully!"
 
