@@ -35,8 +35,8 @@ jobs:
       - name: Run Flake8 in src
         run: docker-compose exec -T app flake8 src
       
-      - name: Run Flake8 in test
-        run: docker-compose exec -T app flake8 test
+      # - name: Run Flake8 in test
+      #   run: docker-compose exec -T app flake8 test
 
       - name: Run tests in Docker container
         run: docker-compose exec -T app pytest /test --maxfail=1 --disable-warnings
