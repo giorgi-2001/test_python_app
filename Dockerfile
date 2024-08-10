@@ -6,7 +6,9 @@ COPY requirements.txt .
 
 RUN pip install -r requirements.txt
 
-COPY . /src
+COPY ./src /src
+
+COPY ./test /test
 
 EXPOSE 8000
 
