@@ -11,7 +11,6 @@ on:
 
 jobs:
   # Job to run tests and static analysis on push
-    
   run-tests:
     name: Run Tests and Static Analysis
     runs-on: ubuntu-latest
@@ -48,8 +47,11 @@ jobs:
       - name: Set up Docker Compose
         run: docker-compose -f docker-compose.yml up -d
 
+      - name: Run Flake8
+        run: docker-compose exec -T app flake8 .
+
       - name: Run tests in Docker container
-        run: docker-compose exec -T app pytest /test --maxfail=1 --disable-warnings
+        run: docker-compose exec -T app pytest --maxfail=1 --disable-warnings
 
       - name: Shut down Docker Compose
         run: docker-compose down
@@ -87,5 +89,6 @@ jobs:
           subject-name: ${{ env.REGISTRY }}/${{ env.IMAGE_NAME}}
           subject-digest: ${{ steps.push.outputs.digest }}
           push-to-registry: true
+
 
 

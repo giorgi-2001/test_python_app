@@ -3,4 +3,4 @@ httpx
 fastapi
 sqlalchemy
 uvicorn
-flake8
+
