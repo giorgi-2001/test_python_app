@@ -6,7 +6,6 @@ from . import services
 from typing import Annotated
 
 
-
 Base.metadata.create_all(bind=engine)
 
 

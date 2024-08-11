@@ -1,4 +1,3 @@
-import pytest
 from fastapi.testclient import TestClient
 from sqlalchemy import create_engine
 from sqlalchemy.orm import sessionmaker
@@ -16,7 +15,8 @@ engine = create_engine(
 )
 
 
-TestingSessionLocal = sessionmaker(autoflush=False, autocommit=False, bind=engine)
+TestingSessionLocal = sessionmaker(
+    autoflush=False, autocommit=False, bind=engine)
 
 
 Base.metadata.create_all(bind=engine)
@@ -77,11 +77,3 @@ def test_delete_item():
     response = client.put("/items/1", json=item)
     assert response.status_code == 200
     assert response.json() == item
-
-
-
-
-
-
-
-
