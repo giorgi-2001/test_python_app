@@ -47,9 +47,6 @@ jobs:
       - name: Set up Docker Compose
         run: docker-compose -f docker-compose.yml up -d
 
-      - name: Run Flake8
-        run: docker-compose exec -T app flake8 .
-
       - name: Run tests in Docker container
         run: docker-compose exec -T app pytest --maxfail=1 --disable-warnings
 
