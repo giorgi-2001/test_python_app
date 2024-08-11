@@ -11,7 +11,6 @@ on:
 
 jobs:
   # Job to run tests and static analysis on push
-    
   run-tests:
     name: Run Tests and Static Analysis
     runs-on: ubuntu-latest
@@ -87,5 +86,6 @@ jobs:
           subject-name: ${{ github.repository }}/app:pr-${{ github.event.number }}
           subject-digest: ${{ steps.push.outputs.digest }}
           push-to-registry: true
+
 
 
