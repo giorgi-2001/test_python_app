@@ -8,12 +8,25 @@ services:
       - 8000:8000
     volumes:
       - ./src:/app/src
+    environment:
+      - PG_PASSWORD=${PG_PASSWORD}
     depends_on:
-      - test
+      - db
 
-  test:
-    build: .
-    container_name: test
-    volumes:
-      - ./test:/app/test
-    command: pytest /test
+  db:
+    container_name: postgres
+    image: postgres:alpine
+    restart: always
+    # set shared memory limit when using docker-compose
+    shm_size: 128mb
+    ports:
+      - "5432:5432"
+    # or set shared memory limit when deploy via swarm stack
+    # volumes:
+    #  - type: tmpfs
+    #    target: /dev/shm
+    #    tmpfs:
+    #      size: 134217728 # 128*2^20 bytes = 128Mb
+    environment:
+      - POSTGRES_PASSWORD=${PG_PASSWORD}
+      - POSTGRES_DB=items_db
