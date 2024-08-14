@@ -3,4 +3,5 @@ httpx
 fastapi
 sqlalchemy
 uvicorn
-
+python-dotenv
+psycopg2-binary
